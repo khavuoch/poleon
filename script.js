@@ -22,6 +22,9 @@ const enterInfo = (animalYr, birthMonth, dayOfBirth) => {
         values[i] = getEvaluatedValue(x);
     }
     console.log('Values =       ' + values);
+	var vals = document.getElementById('values');
+	vals.innerHTML = 'values: ' + values.toString();
+	
 
     let ageGroupValues = [];
 
@@ -35,8 +38,12 @@ const enterInfo = (animalYr, birthMonth, dayOfBirth) => {
         ind++;
     }
     console.log('ageGrpValues = ' + ageGroupValues);
+	var gpVals = document.getElementById('ageGroupValues');
+	gpVals.innerHTML = 'Group values: ' + ageGroupValues.toString();
 
     console.log('Class Level =  ' + (ageGroupValues[0] + ageGroupValues[1] + ageGroupValues[2]));
+	var clLvel = document.getElementById('level');
+	clLvel.innerHTML = 'Class Level =  ' + (ageGroupValues[0] + ageGroupValues[1] + ageGroupValues[2]);
 }
 
 const getEvaluatedValue = (value) => {
@@ -81,7 +88,7 @@ const populateYearSelect = (list, id) => {
     }
 }
 
-enterInfo(1, 1, 1);
+// enterInfo(1, 1, 1);
 populateYearSelect(animalYearsName, 'year');
 populateYearSelect(khmerMonthsName, 'month');
 populateYearSelect(dayName, 'day');
