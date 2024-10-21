@@ -99,6 +99,7 @@ select, button{
 @media(max-width: 450px) {
     .result-section {
         flex-direction: row;
+        padding-bottom: 24px;
     }
     .result {
         flex-direction: column-reverse;
