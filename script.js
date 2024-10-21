@@ -1,16 +1,38 @@
-var animalYearsName = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Sheep', 'Monkey', 'Rooster', 'Dog', 'Pig'];
-var monthsName = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
-var khmerMonthsName = ['មិគសិ', 'បុស្ស', 'មាឃ', 'ផល្គុន', 'ចេត្រ', 'ពិសាខ', 'ជេស្ឋ', 'អាសាធ', 'ស្រាពណ៍', 'ភទ្របទ', 'អស្សុជ', 'កក្តិក'];
-var dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+function renderResult(list, classSuffix = '') {
+    var wrapper = document.querySelector('.result-section');
+    var element = document.createElement("div");
+    element.classList.add('result');
+    if (classSuffix) {
+        element.classList.add(classSuffix);
+    }
+    for (var i = 0; i < list.length; i++) {
+        const valueItem = document.createElement("div");
+        valueItem.classList.add('value-item');
+        if (classSuffix) {
+            valueItem.classList.add(classSuffix);
+        }
+        valueItem.innerHTML = list[i];
+        element.appendChild(valueItem);
+    }
+    wrapper.appendChild(element);
+}
 
-const enterInfo = (animalYr, birthMonth, dayOfBirth) => {
+const calculate = (animalYr, birthMonth, dayOfBirth) => {
     const totalMonths = 12;
     const totalDays = 7;
 
+    // get the rotated lists of the years, months, days
     let years = getRotatedList(animalYr, totalMonths);
     let months = getRotatedList(birthMonth, totalMonths);
     let days = getRotatedList(dayOfBirth, totalDays);
+    console.log('Rotated List = ' + years);
+    console.log('Rotated List = ' + months);
+    console.log('Rotated List = ' + days);
+    renderResult(years);
+    renderResult(months);
+    renderResult(days);
 
+    // calculate the values of each column of year, month, and day
     let values = []
     for (var i = 0; i < totalMonths; i++) {
         let x = 0;
@@ -22,12 +44,12 @@ const enterInfo = (animalYr, birthMonth, dayOfBirth) => {
         values[i] = getEvaluatedValue(x);
     }
     console.log('Values =       ' + values);
-	var vals = document.getElementById('values');
-	vals.innerHTML = 'values: ' + values.toString();
-	
+//	var vals = document.getElementById('values');
+//	vals.innerHTML = 'Values: ' + values.toString();
+    renderResult(values, 'values');
 
+    // calculate numbers that represent the status of life in each of the 3 stages
     let ageGroupValues = [];
-
     var ind = 0;
     for (var k = 0; k < totalMonths; k+=4) {
         let sum = 0;
@@ -38,12 +60,17 @@ const enterInfo = (animalYr, birthMonth, dayOfBirth) => {
         ind++;
     }
     console.log('ageGrpValues = ' + ageGroupValues);
-	var gpVals = document.getElementById('ageGroupValues');
-	gpVals.innerHTML = 'Group values: ' + ageGroupValues.toString();
+//	var gpVals = document.getElementById('ageGroupValues');
+//	gpVals.innerHTML = 'Group values: ' + ageGroupValues.toString();
+    renderResult(ageGroupValues, 'stage-status');
 
+    // calculate the class level. Levels: 52, 64, 76
     console.log('Class Level =  ' + (ageGroupValues[0] + ageGroupValues[1] + ageGroupValues[2]));
-	var clLvel = document.getElementById('level');
-	clLvel.innerHTML = 'Class Level =  ' + (ageGroupValues[0] + ageGroupValues[1] + ageGroupValues[2]);
+//	var clLvel = document.getElementById('level');
+//	clLvel.innerHTML = 'Class Level =  ' + (ageGroupValues[0] + ageGroupValues[1] + ageGroupValues[2]);
+	const finalResult = (ageGroupValues[0] + ageGroupValues[1] + ageGroupValues[2]);
+    renderResult([finalResult], 'final-result');
+
 }
 
 const getEvaluatedValue = (value) => {
@@ -68,11 +95,10 @@ const getRotatedList = (startNum, sizeOfList) => {
         l[i] = curNum;
         curNum++;
     }
-    console.log('Rotated List = ' + l);
     return l;
 }
 
-const populateYearSelect = (list, id) => {
+const populateYearSelect = (list, id, list2 = []) => {
     var yearSelect = document.getElementById(id);
 //    var placeHolder = document.createElement('option');
 //    placeHolder.value = 'Select ' + id;
@@ -82,30 +108,59 @@ const populateYearSelect = (list, id) => {
     for (var i = 0; i < list.length; i++) {
         var opt = document.createElement('option');
         opt.value = i + 1;
-        opt.innerHTML = list[i];
+        if (id === 'month') {
+            opt.innerHTML = list[i] + ' | ' + list2[i];
+        } else {
+            opt.innerHTML = list[i];
+        }
         //    console.log(yearSelect)
         yearSelect.appendChild(opt);
     }
 }
 
-// enterInfo(1, 1, 1);
-populateYearSelect(animalYearsName, 'year');
-populateYearSelect(khmerMonthsName, 'month');
-populateYearSelect(dayName, 'day');
+function checkSelections() {
+    const selectElements = document.querySelectorAll('select');
+    let allSelected = true;
+
+    selectElements.forEach(select => {
+        if (select.value === "-1") {
+            allSelected = false;
+        }
+    });
+
+    document.getElementById("submitBtn").disabled = !allSelected;
+}
 
 const onSumit = () => {
     let selectYear = document.getElementById("year");
     let selectMonth = document.getElementById("month");
     let selectDay = document.getElementById("day");
-
     const yearValue = parseInt(selectYear.value);
     const monthValue = parseInt(selectMonth.value);
     const dayValue = parseInt(selectDay.value);
 
     console.log('Year: ', yearValue, ' Month: ', monthValue, ' Day: ', dayValue);
-    enterInfo(yearValue, monthValue, dayValue);
-
+    calculate(yearValue, monthValue, dayValue);
 }
+
+// ===================
+var animalYearsName = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Sheep', 'Monkey', 'Rooster', 'Dog', 'Pig'];
+var monthsName = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
+var monthsInKhmer = ['មករា','កុម្ភះ','មិនា','មេសា','ឧសភា','មិថុនា','កក្តដា','សីហា','កញ្ញា','តុលា','វិច្ឆកា','ធ្នូ'];
+var khmerMonthsName = ['មិគសិ', 'បុស្ស', 'មាឃ', 'ផល្គុន', 'ចេត្រ', 'ពិសាខ', 'ជេស្ឋ', 'អាសាធ', 'ស្រាពណ៍', 'ភទ្របទ', 'អស្សុជ', 'កក្តិក'];
+var dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+
+populateYearSelect(animalYearsName, 'year');
+populateYearSelect(khmerMonthsName, 'month', monthsInKhmer);
+populateYearSelect(dayName, 'day');
+
+// Call checkSelections() on page load and when any select changes
+document.addEventListener('DOMContentLoaded', checkSelections);
+document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', checkSelections);
+});
+// ====================
 
 
 //const getDropdownOptionList = (array) => {
