@@ -5,13 +5,16 @@ function renderResult(list, classSuffix = '') {
     if (classSuffix) {
         element.classList.add(classSuffix);
     }
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < (classSuffix === 'days' ? 12 : list.length); i++) {
         const valueItem = document.createElement("div");
         valueItem.classList.add('value-item');
         if (classSuffix) {
             valueItem.classList.add(classSuffix);
+            if (i >= list.length) {
+                valueItem.classList.add('hidden');
+            }
         }
-        valueItem.innerHTML = list[i];
+        valueItem.innerHTML = i < list.length ? list[i] : '';
         element.appendChild(valueItem);
     }
     wrapper.appendChild(element);
@@ -30,7 +33,7 @@ const calculate = (animalYr, birthMonth, dayOfBirth) => {
     console.log('Rotated List = ' + days);
     renderResult(years);
     renderResult(months);
-    renderResult(days);
+    renderResult(days, 'days');
 
     // calculate the values of each column of year, month, and day
     let values = []
