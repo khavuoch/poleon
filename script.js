@@ -142,6 +142,7 @@ const onSumit = () => {
     const monthValue = parseInt(selectMonth.value);
     const dayValue = parseInt(selectDay.value);
 
+    document.querySelector('.result-section').innerHTML = ''; // reset result
     console.log('Year: ', yearValue, ' Month: ', monthValue, ' Day: ', dayValue);
     calculate(yearValue, monthValue, dayValue);
 }
